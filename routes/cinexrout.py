@@ -1,101 +1,77 @@
-from flask import Blueprint, redirect, render_template, flash, url_for, request
+from flask import Blueprint, redirect, render_template, flash, url_for, request, jsonify 
 from models.cinexs import *
-import os
+from utils.utils import *
+from utils.utils import encriptar_contrasena
 
-cliente=Clientes()
-pelicula = Peliculas()
+
+
+
+galeria = Galeria()
+
+
 cinex= Blueprint('cinex', __name__)
 
-#Cliente
+@cinex.route('/')
+def Index():
+    result= galeria.consultar_galeria()
+    return render_template('index.html', galerias = result)
 
-@cinex.route('/cliente')
-def Cliente():
-    result = cliente.consultar_cliente()
-    return render_template('clientes.html', clientes = result)
+@cinex.route('/ingreso')
+def Ingreso():
+    result= galeria.consultar_galeria()
+    return render_template('galeria.html', galerias = result)
 
-@cinex.route('/add_cliente', methods = ['POST'])
-def add_cliente():
+@cinex.route('/add_ingreso', methods = ['POST'])
+def add_ingreso():
     try:
         if request.method == 'POST':
-            cliente.setCliente_id(request.form['cliente_id'])
-            cliente.setNombre(request.form['nombre'])
-            cliente.setApellido(request.form['apellido'])
-            cliente.setEmail(request.form['email'])
-            cliente.setTelefono(request.form['telefono'])
-            cliente.insertar_cliente()
-            return redirect(url_for('cinex.Cliente'))
+            galeria.setTitulo(request.form['titulo'])
+            galeria.setFotografo(request.form['fotografo'])
+            galeria.setNota(request.form['nota'])
+            galeria.setLugar(request.form['lugar'])
+            galeria.setCiudad(request.form['ciudad'])
+            galeria.setProvincia(request.form['provincia'])
+            galeria.setFecha(request.form['fecha'])
+            imagen = guardar_archivo_upload(request.files['imagen'])
+            galeria.setImagen(imagen)
+            galeria.insertar_galeria()
+            return redirect(url_for('cinex.Ingreso'))
     except Exception as e:
         raise e
 
-@cinex.route('/delete_cliente/<string:cliente_id>')
-def delete_cliente(cliente_id):
-    cliente.setCliente_id(cliente_id)
-    cliente.eliminar_cliente()
-    return redirect(url_for('cinex.Cliente'))
+@cinex.route('/galeria/json/<string:id>')
+def jsonIngreso(id):
+    galeria.setIdgaleria(id)
+    result = galeria.consultar_galeria_id()
+    print(result)
+    result = jsonify(result)
+    return result
 
-#Peliculas
-@cinex.route('/pelicula')
-def Pelicula():
-    result = pelicula.consultar_pelicula()
-    return render_template('peliculas.html', peliculas = result)
-
-@cinex.route('/add_pelicula', methods = ['POST'])
-def add_pelicula():
+@cinex.route('/galeria/update/<id>', methods = ['POST'])
+def update_ingreso(id):
     try:
         if request.method == 'POST':
-            pelicula.setTitulo(request.form['titulo'])
-            pelicula.setGenero(request.form['genero'])
-            pelicula.setDuracion(request.form['duracion'])
-            pelicula.setClasificacion(request.form['clasificacion'])
-            pelicula.setImg(request.form['img'])
-            pelicula.setSipnosis(request.form['sipnosis'])
-
-            pelicula.insertar_pelicula()
-            return redirect(url_for('cinex.Pelicula'))
+            galeria.setIdgaleria(id)
+            galeria.setFotografo(request.form['idgaleria'])
+            galeria.setTitulo(request.form['titulo'])
+            galeria.setNota(request.form['nota'])
+            galeria.setLugar(request.form['lugar'])
+            galeria.setCiudad(request.form['ciudad'])
+            galeria.setProvincia(request.form['provincia'])
+            galeria.setFecha(request.form['fecha'])
+            imagen = guardar_archivo_upload(request.files['imagen'])
+            galeria.setImg(imagen)
+            galeria.editar_galeria
+            print(galeria.getIdgaleria())
+            return redirect(url_for('cinex.Ingreso'))
     except Exception as e:
         raise e
-def subir_archivo():
-    if request.method == "POST":
-        archivo = request["img"]
-        if archivo:
-            # Ruta donde se guardará el archivo en el servidor
-            ruta_guardado = os.path.join("images", archivo.filename)
-            archivo.save(ruta_guardado)
-            return f"El archivo {archivo.filename} se ha subido correctamente."
-    return redirect(url_for('cinex.Pelicula'))
+
+@cinex.route('/delete_galeria/<string:idgaleria>')
+def delete_galeria(idgaleria):
+    galeria.setIdgaleria(idgaleria)
+    galeria.eliminar_galeria()
+    return redirect(url_for('cinex.Ingreso'))
 
 
-
-
-
-
-"""
-@flaskcontac.route('/edit/<string:id>', methods= ['GET', 'POST'])
-def get_contac(id):
-    try:
-        contac.setSQL(mysql)
-        contac.setId(id)
-        data= contac.modifcontacId()
-        return render_template('edit_contac.html', contac = data)
-    except Exception as e:
-        print(e)
-
-@flaskcontac.route('/update/<id>', methods = ['POST'])
-def update_contac(id):
-    if request.method == 'POST':
-        contac.setFullname(request.form['fullname'])
-        contac.setPhone(request.form['phone'])
-        contac.setEmail(request.form['email'])
-        contac.setId(id)
-        contac.modifcontac()
-        return redirect(url_for('flaskcontac.Index')) 
-
-@flaskcontac.route('/delete/<string:id>')
-def delete_contac(id):
-    contac.setSQL(mysql)
-    contac.setId(id)
-    data = contac.ellimcontac()
-    flash('Contacto removido')
-    return redirect(url_for('flaskcontac.Index'))
-"""
-
+    

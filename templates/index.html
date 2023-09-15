@@ -6,36 +6,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Simple Sidebar - Start Bootstrap Template</title>
+  <title>Cinex | Cartelera</title>
   <!-- Favicon-->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+  <style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  img {
+    max-width: 900px; /* Establece el ancho máximo */
+    min-width: 100px; /* Establece el ancho mínimo */
+    width: 100%; /* Para asegurarse de que el ancho sea del 100% */
+    height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+  }
+
+  .grid-item {
+    position: relative; /* Establece posición relativa */
+    transition: transform 0.3s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .grid-item:hover {
+    filter: opacity(0.9);
+    transform: scale(1.04);
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    gap: 20px;
+    padding: 20px;
+    grid-auto-flow: dense;
+  }
+
+  .grid-text {
+    position: absolute; /* Establece posición absoluta para el texto */
+    bottom: 0; /* Alinea el texto en la parte inferior del elemento */
+    left: 0; /* Alinea el texto en la parte izquierda del elemento */
+    right: 0; /* Alinea el texto en la parte derecha del elemento */
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+    color: white; /* Color del texto */
+    padding: 10px; /* Espaciado interior del contenedor de texto */
+    text-align: center; /* Alineación del texto al centro */
+  }
+</style>
 </head>
 
 <body>
   <div class="d-flex" id="wrapper">
     <!-- Sidebar-->
-    <div class="border-end bg-white" id="sidebar-wrapper">
-      <div class="sidebar-heading border-bottom bg-light">
-        Start Bootstrap
-      </div>
-      <div class="list-group list-group-flush">
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/">Dashboard</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/cliente">Cliente</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
-      </div>
-    </div>
+
     <!-- Page content wrapper-->
     <div id="page-content-wrapper">
       <!-- Top navigation-->
       <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container-fluid">
           <button class="btn btn-primary" id="sidebarToggle">
-            Toggle Menu
+            ValiendoKK
           </button>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -45,40 +79,54 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
               <li class="nav-item active">
-                <a class="nav-link" href="#!">Home</a>
+                <a class="nav-link" href="/ingreso">Ingreso</a>
               </li>
-              <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#!">Action</a>
-                  <a class="dropdown-item" href="#!">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#!">Something else here</a>
-                </div>
-              </li>
+              <li class="nav-item"><a class="nav-link" href="/">Galeria</a></li>
+
             </ul>
           </div>
         </div>
       </nav>
       <!-- Page content-->
-      <div class="container-fluid">
-        <h1 class="mt-4">Simple Sidebar</h1>
-        <p>
-          The starting state of the menu will appear collapsed on smaller
-          screens, and will appear non-collapsed on larger screens. When
-          toggled using the button below, the menu will change.
-        </p>
-        <p>
-          Make sure to keep all page content within the
-          <code>#page-content-wrapper</code>
-          . The top navbar is optional, and just for demonstration. Just
-          create an element with the
-          <code>#sidebarToggle</code>
-          ID which will toggle the menu when clicked.
-        </p>
+      <div class="grid-container">
+        {% for galeria in galerias %}
+        <div class="grid-item">
+          <img src="{{ url_for('static', filename='upload/' + galeria.imagen)}}" alt="Imagen 1">
+          <div class="grid-text">
+            <!-- Agrega aquí tu contenido de texto con etiquetas HTML -->
+            <h2>{{ galeria.titulo }}</h2>
+            <h4>{{ galeria.fotografo }}</h4>
+            <p>{{ galeria.nota }}</p>
+          </div>
+        </div>
+        {% endfor %}
       </div>
+      
+      
+      
+      
+      
+      
+
+</body>
+      <!-- Footer
+      <div class="container-fluid">
+        <div class="row">
+          {% for galeria in galerias %}
+            <div class="col-md-4">
+              <div class="card">
+                <img src="{{ url_for('static', filename='upload/' + galeria.imagen)}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">{{ galeria.titulo }}</h5>
+                </div>
+                <div class="card-footer">
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    -->
     </div>
   </div>
   <!-- Bootstrap core JS-->

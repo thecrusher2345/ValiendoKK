@@ -1,101 +1,79 @@
 from flask import flash
 from utils.accesobd import *
+from typing import Any
 
-class Clientes():
-    #Cedula de los clientes
-    
-    #Metodos
-    def setCliente_id(self, cliente_id):
-        self.__cliente_id= cliente_id
-    def getCliente_id(self):
-        return self.__cliente_id
-    
-    def setNombre(self, nombre):
-        self.__nombre= nombre
-    def getNombre(self):
-        return self.__nombre
-    
-    def setApellido(self, apellido):
-        self.__apellido= apellido
-    def getApellido(self):
-        return self.__apellido
-    
-    def setEmail(self, email):
-        self.__email= email
-    def getEmail(self):
-        return self.__email
-    
-    def setTelefono(self,telefono):
-        self.__telefono= telefono
-    def getTelefono(self):
-        return self.__telefono
-    
-    def setSQL(self, mysql):
-        self.__mysql= mysql
-    def getSQL(self):
-        return self.__mysql
-
-    def consultar_cliente(self):
-        insert = consultarbd('SELECT * FROM clientes c;')
-        return insert
-
-    def insertar_cliente(self):
-        sql= 'INSERT INTO clientes (cliente_id, nombre, apellido, email, telefono) VALUES (%s, %s, %s,%s,%s)'
-        data = (self.getCliente_id(),self.getNombre(),self.getApellido(),self.getEmail(),self.getTelefono())
-        actualizarbd(sql,data)
-        flash("Contacto Ingresado Correctamente!")
-
-    def eliminar_cliente(self):
-        sql='DELETE FROM clientes WHERE cliente_id= {0}'.format(self.getCliente_id())
-        actualizarbd(sql)
-        flash('Contacto Removido con Exito!')
-
-#Pelciulas
-class Peliculas():
-
-    def setPelicula_id(self, pelicula_id):
-        self.__pelicula_id= pelicula_id
-    def getPelciula_id(self):
-        return self.__pelicula_id
+class Galeria():
+    def setIdgaleria(self, idgaleria):
+        self.__idgaleria = idgaleria
+    def getIdgaleria(self):
+        return self.__idgaleria
 
     def setTitulo(self, titulo):
-        self.__titulo= titulo
+        self.__titulo = titulo
     def getTitulo(self):
         return self.__titulo
-    
-    def setGenero(self, genero):
-        self.__genero= genero
-    def getGenero(self):
-        return self.__genero
-    
-    def setDuracion(self, duracion):
-        self.__duracion= duracion
-    def getDuracion(self):
-        return self.__duracion
-    
-    def setClasificacion(self, clasificacion):
-        self.__clasificacion = clasificacion
-    def getClasificacion(self):
-        return self.__clasificacion
-    
-    def setImg(self, img):
-        self.__img=img
-    def getImg(self):
-        return self.__img
-    
-    def setSipnosis(self,sipnosis):
-        self.__sipnosis= sipnosis
-    def getSipnosis(self):
-        return self.__sipnosis
-    
-    def consultar_pelicula(self):
-        insert = consultarbd('SELECT * FROM peliculas p;')
+
+    def setFotografo(self, fotografo):
+        self.__fotografo = fotografo
+    def getFotografo(self):
+        return self.__fotografo
+
+    def setNota(self, nota):
+        self.__nota = nota
+    def getNota(self):
+        return self.__nota
+
+    def setLugar(self, lugar):
+        self.__lugar = lugar
+    def getLugar(self):
+        return self.__lugar
+
+    def setCiudad(self, ciudad):
+        self.__ciudad = ciudad
+    def getCiudad(self):
+        return self.__ciudad
+
+    def setProvincia(self, provincia):
+        self.__provincia = provincia
+    def getProvincia(self):
+        return self.__provincia
+
+    def setFecha(self, fecha):
+        self.__fecha = fecha
+    def getFecha(self):
+        return self.__fecha
+
+    def setImagen(self, imagen):
+        self.__imagen = imagen
+    def getImagen(self):
+        return self.__imagen
+
+    def consultar_galeria(self):
+        insert = consultarbd('SELECT idgaleria, titulo, fotografo, nota, lugar, ciudad, provincia, fecha, imagen FROM galeria;')
         return insert
-    
-    def insertar_pelicula(self):
-        sql= 'CALL InsertarNuevaPelicula(%s, %s, %s, %s, %s, %s);'
-        data = (self.getTitulo(),self.getGenero(),self.getDuracion(),self.getClasificacion(),self.getImg(), self.getSipnosis())
+    def consultar_galeria_id(self):
+        sql = 'SELECT idgaleria, titulo, fotografo, nota, lugar, ciudad, provincia, fecha, imagen FROM galeria where idgaleria = {0}'.format(self.getIdgaleria())
+        data = consultarbd(sql)
+        return data[0]
+
+    def insertar_galeria(self):
+        sql= 'INSERT INTO galeria (titulo, fotografo, nota, lugar, ciudad, provincia, fecha,imagen) VALUES (%s, %s, %s,%s,%s, %s,%s,%s)'
+        data = ( self.getTitulo(), self.getFotografo(), self.getNota(), self.getLugar(), self.getCiudad(), self.getProvincia(),self.getFecha(), self.getImagen())
         actualizarbd(sql,data)
-        flash("Contacto Actualizado Correctamente!")
+        flash("Cliente Ingresado!")
+
+    def eliminar_galeria(self):
+        sql='DELETE FROM galeria WHERE idgaleria= {0}'.format(self.getIdgaleria())
+        actualizarbd(sql)
+        flash('Cliente Removido!')
+
+    def editar_galeria(self):
+        sql='UPDATE galeria SET idgaleria = %s, titulo = %s, fotografo=%s, nota= %s, lugar=%s , ciudad =%s, provincia =%s, fecha =%s, imagen =%s  WHERE idgaleria ={0}'.format(self.getIdgaleria())
+        data = (self.getIdgaleria(), self.getTitulo(), self.getFotografo(), self.getNota(), self.getLugar(), self.getCiudad(), self.getProvincia(),self.getFecha(), self.getImagen())
+        actualizarbd(sql,data)
+        flash("Cliente Actualizado")
+
+
+
 
     
